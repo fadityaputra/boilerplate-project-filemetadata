@@ -4,26 +4,17 @@ const multer = require('multer');
 require('dotenv').config();
 
 const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Middleware
 app.use(cors());
 app.use('/public', express.static(process.cwd() + '/public'));
 
-// Set up multer for file upload handling
-const upload = multer({ storage: multer.memoryStorage() });
-
-// Serve the HTML file
 app.get('/', (req, res) => {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-// File analyse API route
 app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
-  }
-
-  // Send back file metadata
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   res.json({
     name: req.file.originalname,
     type: req.file.mimetype,
@@ -31,8 +22,5 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   });
 });
 
-// Start server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Your app is listening on port ${port}`);
-});
+// ✅ Export the app for Vercel (DO NOT use app.listen here)
+module.exports = app;
