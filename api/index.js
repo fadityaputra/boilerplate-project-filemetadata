@@ -22,5 +22,10 @@ app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
   });
 });
 
-// ✅ Export the app for Vercel (DO NOT use app.listen here)
+// Add this line to log a message when the server starts
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+// Export the app for Vercel (DO NOT use app.listen here when deploying)
 module.exports = app;
